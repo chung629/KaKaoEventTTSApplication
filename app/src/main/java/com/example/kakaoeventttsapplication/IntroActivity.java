@@ -7,6 +7,7 @@ import android.os.Handler;
 
 import androidx.annotation.Nullable;
 
+// test
 public class IntroActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
