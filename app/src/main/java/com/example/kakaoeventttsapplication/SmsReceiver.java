@@ -40,14 +40,15 @@ public class SmsReceiver extends BroadcastReceiver { // BroadcastReceiver를 상
             Log.d(TAG, "received date: "+receivedDate);
 
             // 해당 내용을 모두 합쳐서 액티비티로 보낸다.
-            sendToActivity(context, sender+'\n'+contents+'\n'+format.format(receivedDate));
+            sendToActivity(context, sender, contents);
         }
     }
 
-    private void sendToActivity(Context context, String str){
+    private void sendToActivity(Context context, String sender, String contents){
         Intent intent = new Intent(context, SmsActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("string", str);
+        intent.putExtra("sender", sender);
+        intent.putExtra("contents", contents);
         context.startActivity(intent);
     }
 
