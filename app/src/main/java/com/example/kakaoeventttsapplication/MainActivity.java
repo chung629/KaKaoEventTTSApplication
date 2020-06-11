@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // SMS 수신 허가
         int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS);
 
         if(permissionCheck == PackageManager.PERMISSION_GRANTED){
@@ -31,7 +32,9 @@ public class MainActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECEIVE_SMS}, SMS_RECEIVE_PERMISSON);
             }
         }
+        // SMS 수신 허가 끝
     }
+    // SMS 수신 허가 관련
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int grantResults[]){
         switch(requestCode){
@@ -44,5 +47,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
     }
+    // SMS 수신 허가 관련
 
 }
