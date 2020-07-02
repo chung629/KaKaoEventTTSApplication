@@ -7,7 +7,7 @@ import android.os.Handler;
 
 import androidx.annotation.Nullable;
 
-// test
+// Intro 3초뒤 본 화면으로 바뀜
 public class IntroActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,3 +29,4 @@ public class IntroActivity extends Activity {
         finish();
     }
 }
+// Intro 종료

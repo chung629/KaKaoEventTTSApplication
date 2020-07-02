@@ -9,6 +9,7 @@ import android.widget.EditText;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+// SMS 메시지가 오면 화면에 표시 해주는 Activity
 public class SmsActivity extends AppCompatActivity {
    EditText editTextSend;
    EditText editTextContent;
@@ -45,5 +46,5 @@ public class SmsActivity extends AppCompatActivity {
         super.onNewIntent(intent);
     }
 }
-
+// SMS 메시지 끝
 

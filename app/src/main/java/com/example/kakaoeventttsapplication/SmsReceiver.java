@@ -11,19 +11,16 @@ import android.util.Log;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class SmsReceiver extends BroadcastReceiver { // BroadcastReceiver를 상속한다!!
+// 문자메시지를 받아 내용과 발신 번호 등을 표시 해주는 Receiver
+public class SmsReceiver extends BroadcastReceiver {
 
     private static final String TAG = "SmsReceiver";
     private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        // sms가 오면 onReceive() 가 호출된다. 여기에 처리하는 코드 작성하면 된다.
-        // Log.d(TAG, "onReceive() 호출됨.");
 
         Bundle bundle = intent.getExtras();
-        // parseSmsMessage() 메서드의 코드들은 SMS문자의 내용을 뽑아내는 정형화된 코드이다.
-        // 복잡해 보일 수 있으나 그냥 그대로 가져다 쓰면 된다.
         SmsMessage[] messages = parseSmsMessage(bundle);
 
         if(messages.length>0){

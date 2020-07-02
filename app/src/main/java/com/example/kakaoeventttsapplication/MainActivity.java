@@ -48,5 +48,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     // SMS 수신 허가 관련
-
 }
