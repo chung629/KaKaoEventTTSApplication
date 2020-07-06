@@ -45,7 +45,7 @@ public class FuncAndNoticeSettings {
     /*
     [ isNoticeSoundOn() ]
     알림음 활성 여부를 리턴. {활성:true, 비활성:false}
-    SmsReceiver 35번 라인에서 사용하였음.
+    SmsReceiver 33번 라인에서 사용하였음.
     */
     public static boolean isNoticeSoundOn() {
         return NoticeSoundOn;
