@@ -34,6 +34,7 @@
                 android:padding="14dp"
                 android:textSize="20dp"
                 android:textStyle="bold"
+                android:checked="true"
                 />
 
             <TextView
@@ -175,13 +176,14 @@
                 android:textSize="16dp"/>
 
             <Switch
-                android:id="@+id/switch6"
+                android:id="@+id/notice_sound_switch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="수신 시 알림음 재생"
                 android:padding="14dp"
                 android:textSize="20dp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:checked="true"/>
 
             <TextView
                 android:id="@+id/title7"
