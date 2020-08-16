@@ -3,6 +3,9 @@ package com.example.kakaoeventttsapplication;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
@@ -22,6 +25,17 @@ public class SmsReceiver extends BroadcastReceiver {
 
         Bundle bundle = intent.getExtras();
         SmsMessage[] messages = parseSmsMessage(bundle);
+
+        /*
+        5.알림 설정 [수신 시 알림음 재생]
+        FuncAndNoticeSettings.isNoticeSoundOn() == true -> 알림음 스위치가 켜졌을 경우 알림음 재생
+         */
+        if(FuncAndNoticeSettings.isNoticeSoundOn()){
+            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Ringtone ringtone = RingtoneManager.getRingtone(context, notification);
+            ringtone.play();
+        }
+        // 알림음 설정
 
         if(messages.length>0){
             // 문자메세지에서 송신자와 관련된 내용을 뽑아낸다.
