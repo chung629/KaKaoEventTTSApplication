@@ -40,19 +40,14 @@ public class SmsActivity extends AppCompatActivity {
     }
     private void processIntent(Intent intent){
         if(intent != null){
-            boolean textSetting1 = intent.getBooleanExtra("setting1", true);
-            boolean textSetting2 = intent.getBooleanExtra("setting2", true);
-            boolean textSetting3 = intent.getBooleanExtra("setting3", true);
+
 
             String string = intent.getStringExtra("contents");
-            if(textSetting1)
-                editTextContent.setText(string);
+            editTextContent.setText(string);
             string = intent.getStringExtra("sender");
-            if(textSetting2)
-                editTextSend.setText(string);
+            editTextSend.setText(string);
             string = intent.getStringExtra("receivedDate");
-            if(textSetting3)
-                editTextSendTime.setText(string);
+            editTextSendTime.setText(string);
         }
     }
     @Override
