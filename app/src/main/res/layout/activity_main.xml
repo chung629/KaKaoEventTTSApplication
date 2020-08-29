@@ -228,31 +228,34 @@
                 android:textSize="16dp"/>
 
             <Switch
-                android:id="@+id/switch7"
+                android:id="@+id/textSetting1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:checked="true"
+                android:padding="14dp"
                 android:text="발신자"
-                android:padding="14dp"
                 android:textSize="20dp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <Switch
-                android:id="@+id/switch8"
+                android:id="@+id/textSetting2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:checked="true"
+                android:padding="14dp"
                 android:text="발신내용"
-                android:padding="14dp"
                 android:textSize="20dp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <Switch
-                android:id="@+id/switch9"
+                android:id="@+id/textSetting3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="발신시간"
+                android:checked="true"
                 android:padding="14dp"
+                android:text="발신시간"
                 android:textSize="20dp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
         </LinearLayout>
     </ScrollView>

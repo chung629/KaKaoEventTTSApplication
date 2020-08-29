@@ -1,10 +1,13 @@
 package com.example.kakaoeventttsapplication;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class SmsActivity extends AppCompatActivity {
    EditText editTextSend;
    EditText editTextContent;
+   EditText editTextSendTime;
    Button button;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -21,6 +25,8 @@ public class SmsActivity extends AppCompatActivity {
 
         editTextContent = (EditText)findViewById(R.id.contentsText);
         editTextSend = findViewById(R.id.senderText);
+        editTextSendTime = findViewById(R.id.sendTimeText);
+
         Intent passedIntent = getIntent();
         processIntent(passedIntent);
 
@@ -34,10 +40,19 @@ public class SmsActivity extends AppCompatActivity {
     }
     private void processIntent(Intent intent){
         if(intent != null){
+            boolean textSetting1 = intent.getBooleanExtra("setting1", true);
+            boolean textSetting2 = intent.getBooleanExtra("setting2", true);
+            boolean textSetting3 = intent.getBooleanExtra("setting3", true);
+
             String string = intent.getStringExtra("contents");
-            editTextContent.setText(string);
+            if(textSetting1)
+                editTextContent.setText(string);
             string = intent.getStringExtra("sender");
-            editTextSend.setText(string);
+            if(textSetting2)
+                editTextSend.setText(string);
+            string = intent.getStringExtra("receivedDate");
+            if(textSetting3)
+                editTextSendTime.setText(string);
         }
     }
     @Override

@@ -18,6 +18,8 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import java.util.Date;
+
 public class MainActivity extends AppCompatActivity {
     private static final int SMS_RECEIVE_PERMISSON = 0;
 
@@ -28,6 +30,11 @@ public class MainActivity extends AppCompatActivity {
     // 알림 안내 권한 설정
     Switch Alarm_Permission_Switch;
     Button Alarm_Permission_Setting;
+
+    // 재생텍스트 설정
+    public Switch textSetting1;
+    Switch textSetting2;
+    Switch textSetting3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +82,11 @@ public class MainActivity extends AppCompatActivity {
         }
         // SMS 수신 허가 끝
 
+        // 재생텍스트 설정 시작
+        textSetting1 = findViewById(R.id.textSetting1);
+        textSetting2 = findViewById(R.id.textSetting2);
+        textSetting3 = findViewById(R.id.textSetting3);
+        // 재생텍스트 설정 끝
     }
     // SMS 수신 허가 관련
     @Override
@@ -106,5 +118,20 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Alarm_Permission_Switch.setChecked(true);
         }
+        // 알림권한 설정 관련 끝
+        // 재생텍스트 설정 관련 시작
+        sendTextSettingState(this, textSetting1.isChecked(), textSetting2.isChecked(), textSetting3.isChecked());
+        // 재생텍스트 설정 관련 끝
     }
+
+    // 재생 텍스트 관련 액티비티 송신
+    private void sendTextSettingState(Context context, boolean textSetting1, boolean textSetting2, boolean textSetting3){
+        Intent intent = new Intent(context, SmsActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("setting1", textSetting1);
+        intent.putExtra("setting2", textSetting2);
+        intent.putExtra("setting3", textSetting3);
+
+    }
+    // 재생 텍스트 관련 액티비티 송신 끝
 }
