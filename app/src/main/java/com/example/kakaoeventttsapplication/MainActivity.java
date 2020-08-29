@@ -25,6 +25,8 @@ import android.speech.tts.TextToSpeech;
 import static android.speech.tts.TextToSpeech.ERROR;
 import java.util.Locale;
 
+import java.util.Date;
+
 public class MainActivity extends AppCompatActivity {
     private static final int SMS_RECEIVE_PERMISSON = 0;
 
@@ -153,7 +155,6 @@ public class MainActivity extends AppCompatActivity {
         Intent passedIntent = getIntent();
         processIntent(passedIntent);
 
-
     }
 
     private void processIntent(Intent intent) {
@@ -213,5 +214,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Alarm_Permission_Switch.setChecked(true);
         }
+        // 알림권한 설정 관련 끝
     }
 }
