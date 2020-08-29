@@ -56,7 +56,7 @@ public class SmsReceiver extends BroadcastReceiver {
     }
 
     private void sendToActivity(Context context, String sender, String contents){
-        Intent intent = new Intent(context, SmsActivity.class);
+        Intent intent = new Intent(context, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("sender", sender);
         intent.putExtra("contents", contents);
