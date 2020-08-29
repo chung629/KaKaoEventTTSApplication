@@ -6,17 +6,24 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
+import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
+import android.speech.tts.TextToSpeech;
+
+import static android.speech.tts.TextToSpeech.ERROR;
+import java.util.Locale;
 
 import java.util.Date;
 
@@ -27,9 +34,18 @@ public class MainActivity extends AppCompatActivity {
     Switch FuncSwitch;
     Switch NoticeSoundSwitch;
 
+
+
+
+    SeekBar seekVolumn;
+    static String Sms_Text;
+    TextToSpeech tts;
+    float TTS_speed;
+
     // 알림 안내 권한 설정
     Switch Alarm_Permission_Switch;
     Button Alarm_Permission_Setting;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +92,98 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         // SMS 수신 허가 끝
+
+        // TTS를 생성하고 OnInitListener로 초기화 한다.
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != ERROR) {
+                    // 언어를 선택한다.
+                    tts.setLanguage(Locale.KOREAN);
+                }
+            }
+        });
+
+        // SeekBar 부분
+        seekVolumn = (SeekBar) findViewById(R.id.sound_bar);
+        final AudioManager audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+        int nMax = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        int nCurrentVolumn = audioManager
+                .getStreamVolume(AudioManager.STREAM_MUSIC);
+        seekVolumn.setMax(nMax);
+        seekVolumn.setProgress(nCurrentVolumn);
+        seekVolumn.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress,
+                                          boolean fromUser) {
+                // TODO Auto-generated method stub
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
+                        progress, 0);
+            }
+        });
+
+
+        // Spinner 부분
+        Spinner speechSpinner = (Spinner)findViewById(R.id.spinner);
+        ArrayAdapter speechAdapter = ArrayAdapter.createFromResource(this,
+                R.array.speech_speed, android.R.layout.simple_spinner_item);
+        speechAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        speechSpinner.setAdapter(speechAdapter);
+        speechSpinner.setSelection(1);  //기본값 지정 보통(1.0)
+
+        speechSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            } //이 오버라이드 메소드에서 position은 몇번째 값이 클릭됬는지 알 수 있습니다.
+            //getItemAtPosition(position)를 통해서 해당 값을 받아올수있습니다.
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
+
+        Intent passedIntent = getIntent();
+        processIntent(passedIntent);
+
     }
+
+    private void processIntent(Intent intent) {
+        if (intent != null) {
+            String contents = intent.getStringExtra("contents");
+            String sender = intent.getStringExtra("sender");
+            Sms_Text = sender +" "+ contents;
+
+            Spinner speechSpinner = (Spinner)findViewById(R.id.spinner);
+            String speed=speechSpinner.getSelectedItem().toString();
+            String abc[]=speed.split("\\(");
+            speed=abc[1].substring(0,abc[1].length()-1);
+            TTS_speed=Float.parseFloat(speed);
+
+            Boolean chk=FuncAndNoticeSettings.isFuncOn();
+            if (chk){
+                tts.setPitch(1.0f);         // 음성 톤은 기본 설정
+                tts.setSpeechRate(TTS_speed);    // 읽는 속도
+                tts.speak(Sms_Text,TextToSpeech.QUEUE_FLUSH, null);
+            }
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        processIntent(intent);
+        super.onNewIntent(intent);
+    }
+
     // SMS 수신 허가 관련
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int grantResults[]){

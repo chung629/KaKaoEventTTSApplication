@@ -145,9 +145,8 @@
                     android:textSize="20dp"
                     android:textStyle="bold" />
 
-                <ProgressBar
-                    android:id="@+id/progressBar2"
-                    style="?android:attr/progressBarStyleHorizontal"
+                <SeekBar
+                    android:id="@+id/sound_bar"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1" />
@@ -169,6 +168,13 @@
                     android:padding="14dp"
                     android:textSize="20dp"
                     android:textStyle="bold"/>
+
+                <Spinner
+                    android:id="@+id/spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
             </LinearLayout>
 
             <TextView

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <string-array name="speech_speed">
+        <item>느리게(0.5)</item>
+        <item>보통(1.0)</item>
+        <item>조금빠르게(1.5)</item>
+        <item>빠르게(2.0)</item>
+    </string-array>
+
+</resources>
