@@ -6,12 +6,19 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothServerSocket;
+import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.provider.Telephony;
 import android.view.View;
 import android.widget.AdapterView;
@@ -24,9 +31,16 @@ import android.widget.Toast;
 import android.speech.tts.TextToSpeech;
 
 import static android.speech.tts.TextToSpeech.ERROR;
+
+import java.io.IOError;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import java.util.Date;
+import java.util.Set;
+import java.util.UUID;
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
     private static final int SMS_RECEIVE_PERMISSON = 0;
@@ -45,6 +59,17 @@ public class MainActivity extends AppCompatActivity {
     Switch Alarm_Permission_Switch;
     Button Alarm_Permission_Setting;
 
+    // 블루투스
+    BluetoothAdapter mBluetoothAdapter;
+    static final int REQUEST_ENABLE_BT=3;
+    private Set<BluetoothDevice> devices;
+    private BluetoothDevice conntedDevice;
+    BluetoothSocket mBluetoothSocket;
+    BluetoothServerSocket mBluetoothServerSocket;
+
+
+    Switch btSwitch;
+    Button btSetting;
     // 재생 텍스트 설정
     Switch textSetting1;
     Switch textSetting2;
@@ -163,6 +188,20 @@ public class MainActivity extends AppCompatActivity {
         Intent passedIntent = getIntent();
         processIntent(passedIntent);
 
+
+        // ------------------------------------------------------------
+        // 블루투스 기능
+        btSetting=findViewById(R.id.bluetooth_setting_btn);
+        btSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(Settings.ACTION_BLUETOOTH_SETTINGS);
+                startActivityForResult(intent,0);   //startActivityForResult() 는 호출한 Activity로 부터 결과를 받을 경우 사용.
+            }
+        });
+        btSwitch =findViewById(R.id.bluetooth_state);
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
     }
 
     private void processIntent(Intent intent) {
@@ -217,6 +256,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         //requestCode = 0는 알림 안내 권한 설정 관련 코드 입니다
+        switch(requestCode) {
+            case REQUEST_ENABLE_BT:
+                if(resultCode == RESULT_OK) {
+                    // 블루투스가 활성 상태로 변경됨
+                }
+                else if(resultCode == RESULT_CANCELED) {
+                    // 블루투스가 비활성 상태임
+//                    finish();  //  어플리케이션 종료
+                }
+                break;
+        }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -230,5 +280,80 @@ public class MainActivity extends AppCompatActivity {
             Alarm_Permission_Switch.setChecked(true);
         }
         // 알림권한 설정 관련 끝
+
+        //-------------------- Bluetooth 기능 구현- --------
+
+        //블루투스가 활성화 여부에 따라 스위치 on/off 변경
+        if(!mBluetoothAdapter.isEnabled()) {
+            btSwitch.setChecked(false);
+        }
+        else{
+            btSwitch.setChecked(true);
+        }
+//            if (mBluetoothAdapter.getName())
+//        devices.toString() // 페어링된 기기 주소들 모음 mBluetoothAdapter.getName() 폰기종
+//        mBluetoothAdapter.getAddress()
+
+        devices=mBluetoothAdapter.getBondedDevices();
+        if(devices.size()>0){
+//            Toast.makeText(getApplicationContext(),"0"+mBluetoothAdapter.getRemoteDevice("18:54:CF:C8:16:EA").getName(), Toast.LENGTH_SHORT).show(); // 저 주소해당되는 페어링된 기기 이름
+//            Toast.makeText(getApplicationContext(),"1"+mBluetoothAdapter.getRemoteDevice(mBluetoothAdapter.getAddress()).getName(), Toast.LENGTH_SHORT).show(); // 핸드폰의 주소의 네임을 하는듯
+
+//            Toast.makeText(getApplicationContext(),"addr list"+"/"+devices.toString(), Toast.LENGTH_SHORT).show(); //페어링된 기기들의 리스트
+            Log.d("TAG",devices.toString());
+
+            for (int i=0;i<devices.size();i++)
+            {
+//            Toast.makeText(getApplicationContext(),"i"+i+"/"+devices.toArray()[i], Toast.LENGTH_SHORT).show();
+//            mBluetoothAdapter.getState()//12나옴    mBluetoothAdapter.getRemoteDevice(devices.toArray()[i]+"").getBondState()  동일하게 12
+                Log.d("TAG","["+devices.toArray()[i]+"]"+mBluetoothAdapter.getRemoteDevice(devices.toArray()[i]+"").getName()+" bondstate:"+mBluetoothAdapter.getRemoteDevice(devices.toArray()[i]+"").getBondState()+" getstate:"+mBluetoothAdapter.getState());
+//                mBluetoothAdapter.getRemoteDevice("");
+                if (mBluetoothSocket.isConnected())
+                {
+                 Log.d("TAG","YYYYYYYYEEEEEEEEESSSSSS");
+                }
+            }
+        }
+        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+        if (pairedDevices == null || pairedDevices.size() == 0) {
+            Toast.makeText(getApplicationContext(),"No Paired Devices Found",Toast.LENGTH_SHORT).show();
+        } else {
+            ArrayList<BluetoothDevice> list = new ArrayList<BluetoothDevice>();
+            list.addAll(pairedDevices);
+
+//            Toast.makeText(getApplicationContext(),"list2 "+pairedDevices.toString(),Toast.LENGTH_SHORT).show(); // devices랑 똑같이 페어링된 기기목록
+            Toast.makeText(getApplicationContext(),"2"+list.get(1).getName(),Toast.LENGTH_SHORT).show();
+        }
+
+        {
+
+//            Toast.makeText(getApplicationContext(),"3"+mBluetoothAdapter.getState()+mBluetoothAdapter.getAddress(),Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(),"4"+mBluetoothAdapter.getBluetoothLeScanner().toString(),Toast.LENGTH_SHORT).show(); //이상한거나옴
+//            Toast.makeText(getApplicationContext(),"5"+mBluetoothAdapter.getRemoteDevice("18:54:CF:C8:16:EA").getName(),Toast.LENGTH_SHORT).show(); // 저 주소해당되는 페어링된 기기 이름
+//            Toast.makeText(getApplicationContext(),"5"+mBluetoothAdapter.getBluetoothLeScanner(),Toast.LENGTH_SHORT).show(); //이상한주소같은느낌
+        }
+
+
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if(mBluetoothAdapter == null) {
+            //장치가 블루투스를 지원하지 않는 경우.
+            Toast.makeText(getApplicationContext(), "블루투스 기능을 지원하지 않음", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+        else {
+            // 장치가 블루투스를 지원하는 경우.
+            if(!mBluetoothAdapter.isEnabled()) {
+                // 블루투스 활성화 요청
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+            }
+        }
+    }
+
+
 }
