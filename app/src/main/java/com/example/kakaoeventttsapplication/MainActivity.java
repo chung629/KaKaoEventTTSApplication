@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
     Switch textSetting2;
     Switch textSetting3;
 
+    // 블루투스 설정
     BroadcastReceiver bluetoothReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -220,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         tv_paired = findViewById(R.id.tv_paired);
 
-
+        //블루투스 설정
         registerReceiver(this.bluetoothReceiver, new IntentFilter("android.bluetooth.device.action.ACL_CONNECTED"));
         registerReceiver(this.bluetoothReceiver, new IntentFilter("android.bluetooth.device.action.ACL_DISCONNECTED"));
     }
