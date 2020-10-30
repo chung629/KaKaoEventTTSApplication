@@ -10,11 +10,14 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
@@ -24,9 +27,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.speech.tts.TextToSpeech;
 
@@ -66,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     private BluetoothDevice conntedDevice;
     BluetoothSocket mBluetoothSocket;
     BluetoothServerSocket mBluetoothServerSocket;
-
+    TextView tv_paired;
 
     Switch btSwitch;
     Button btSetting;
@@ -74,6 +79,18 @@ public class MainActivity extends AppCompatActivity {
     Switch textSetting1;
     Switch textSetting2;
     Switch textSetting3;
+
+    BroadcastReceiver bluetoothReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            BluetoothDevice device = (BluetoothDevice) intent.getParcelableExtra("android.bluetooth.device.extra.DEVICE");
+            if ("android.bluetooth.device.action.ACL_CONNECTED".equals(action)) {
+                MainActivity.this.tv_paired.setText(device.getName().toString());
+            } else if ("android.bluetooth.device.action.ACL_DISCONNECTED".equals(action)) {
+                MainActivity.this.tv_paired.setText("없음");
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,8 +218,13 @@ public class MainActivity extends AppCompatActivity {
         });
         btSwitch =findViewById(R.id.bluetooth_state);
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        tv_paired = findViewById(R.id.tv_paired);
 
+
+        registerReceiver(this.bluetoothReceiver, new IntentFilter("android.bluetooth.device.action.ACL_CONNECTED"));
+        registerReceiver(this.bluetoothReceiver, new IntentFilter("android.bluetooth.device.action.ACL_DISCONNECTED"));
     }
+
 
     private void processIntent(Intent intent) {
         Sms_Text = "";
@@ -308,10 +330,10 @@ public class MainActivity extends AppCompatActivity {
 //            mBluetoothAdapter.getState()//12나옴    mBluetoothAdapter.getRemoteDevice(devices.toArray()[i]+"").getBondState()  동일하게 12
                 Log.d("TAG","["+devices.toArray()[i]+"]"+mBluetoothAdapter.getRemoteDevice(devices.toArray()[i]+"").getName()+" bondstate:"+mBluetoothAdapter.getRemoteDevice(devices.toArray()[i]+"").getBondState()+" getstate:"+mBluetoothAdapter.getState());
 //                mBluetoothAdapter.getRemoteDevice("");
-                if (mBluetoothSocket.isConnected())
-                {
-                 Log.d("TAG","YYYYYYYYEEEEEEEEESSSSSS");
-                }
+//                if (mBluetoothSocket.isConnected())
+//                {
+//                 Log.d("TAG","YYYYYYYYEEEEEEEEESSSSSS");
+//                }
             }
         }
         Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
