@@ -18,7 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 // SMS 메시지가 오면 화면에 표시 해주는 Activity
 public class SmsActivity extends AppCompatActivity {
     
-  String string2="";
+   String string2="";
    EditText editTextSend;
    EditText editTextContent;
    EditText editTextSendTime;
@@ -55,6 +55,7 @@ public class SmsActivity extends AppCompatActivity {
             string2 += string;
             string = intent.getStringExtra("receivedDate");
             editTextSendTime.setText(string);
+            string2 += string;
         }
     }
     @Override

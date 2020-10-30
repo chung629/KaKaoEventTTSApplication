@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.provider.Telephony;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     Switch FuncSwitch;
     Switch NoticeSoundSwitch;
 
+    //TTS 관련
     SeekBar seekVolumn;
     static String Sms_Text;
     TextToSpeech tts;
@@ -68,6 +70,10 @@ public class MainActivity extends AppCompatActivity {
 
     Switch btSwitch;
     Button btSetting;
+    // 재생 텍스트 설정
+    Switch textSetting1;
+    Switch textSetting2;
+    Switch textSetting3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +104,11 @@ public class MainActivity extends AppCompatActivity {
         else
             Alarm_Permission_Switch.setChecked(true);
         // 알림 안내 권한 설정 끝
+
+        // 재생 텍스트 설정
+        textSetting1 = findViewById(R.id.textSetting1);
+        textSetting2 = findViewById(R.id.textSetting2);
+        textSetting3 = findViewById(R.id.textSetting3);
 
         // SMS 수신 허가
         int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS);
@@ -194,10 +205,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void processIntent(Intent intent) {
+        Sms_Text = "";
         if (intent != null) {
             String contents = intent.getStringExtra("contents");
             String sender = intent.getStringExtra("sender");
-            Sms_Text = sender +" "+ contents;
+            String time = intent.getStringExtra("receivedDate");
+            if(textSetting1.isChecked())
+                Sms_Text += sender + " ";
+            if(textSetting2.isChecked())
+                Sms_Text += contents + " ";
+            if(textSetting3.isChecked())
+                Sms_Text += time + " ";
 
             Spinner speechSpinner = (Spinner)findViewById(R.id.spinner);
             String speed=speechSpinner.getSelectedItem().toString();
